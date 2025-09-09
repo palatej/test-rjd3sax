@@ -38,20 +38,49 @@ daic<-function(s, title){
 
 }
 
+dbic<-function(s, title){
+  z<-lapply(s, function(z){ltd(rjd3toolkit::clean_extremities(z))})
+  sel<-sapply(z, is.null)
+  if (any(sel))z<-z[-which(sel)]
+
+  z<-sapply(z, function(r){r$initial$likelihood$bic-r$final$likelihood$bic})
+  ww<<-c(ww,z)
+  hist(z, breaks=15, main=title)
+
+  print(sum(z>0)/length(z))
+
+  z<-lapply(s, function(z){ltd(rjd3toolkit::clean_extremities(z), TRUE)})
+  sel<-sapply(z, is.null)
+  if (any(sel))z<-z[-which(sel)]
+
+  z<-sapply(z, function(r){r$initial$likelihood$bic-r$final$likelihood$bic})
+  zz<<-c(zz,z)
+  hist(z, breaks=15, main=paste0(title, "(logs)"))
+
+  print(sum(z>0)/length(z))
+
+}
+
+load("./Data/IP_US")
+dbic(IP_Us, "US")
+
+load("./Data/IP_US2")
+dbic(IP_Us2, "US2")
+
 load("./Data/IP_BELGIUM")
-daic(IP_Belgium, "Belgium")
+dbic(IP_Belgium, "Belgium")
 
 load("./Data/IP_GERMANY")
-daic(IP_Germany, "Germany")
+dbic(IP_Germany, "Germany")
 
 load("./Data/IP_FRANCE")
-daic(IP_France, "France")
+dbic(IP_France, "France")
 
 load("./Data/IP_SPAIN")
-daic(IP_Spain, "Spain")
+dbic(IP_Spain, "Spain")
 
 load("./Data/IP_ITALY")
-daic(IP_Italy, "Italy")
+dbic(IP_Italy, "Italy")
 
 
 
