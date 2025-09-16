@@ -5,7 +5,7 @@ ltd1<-function(s){
   td<-rjd3toolkit::td(s=s)
   easter<-rjd3toolkit::easter_variable(s=s)
 
-  q<-rjd3sax::ltdarima_estimation(s, regular=c(0,1,1), seasonal=c(0,1,1), X=cbind(td, easter), eps=1e-15)
+  q<-rjd3sax::ltdarima_estimation(s, regular=c(0,1,1), seasonal=c(0,1,1), X=cbind(td, easter), eps=1e-15, decomposition=FALSE)
   return(q)
 }
 
