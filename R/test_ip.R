@@ -61,30 +61,54 @@ dbic<-function(s, title){
 
 }
 
+PVAL<-0.001
+
+lrtest<-function(s, title){
+  z<-lapply(s, function(z){ltd(rjd3toolkit::clean_extremities(z))})
+  sel<-sapply(z, is.null)
+  if (any(sel))z<-z[-which(sel)]
+
+  z<-sapply(z, function(r){r$final$model$lr_test[2]})
+  ww<<-c(ww,z)
+  hist(z, breaks=15, main=title)
+
+  print(sum(z<PVAL)/length(z))
+
+  z<-lapply(s, function(z){ltd(rjd3toolkit::clean_extremities(z), TRUE)})
+  sel<-sapply(z, is.null)
+  if (any(sel))z<-z[-which(sel)]
+
+  z<-sapply(z, function(r){r$final$model$lr_test[2]})
+  zz<<-c(zz,z)
+  hist(z, breaks=15, main=paste0(title, "(logs)"))
+
+  print(sum(z<PVAL)/length(z))
+
+}
+
+
 load("./Data/IP_US")
-dbic(IP_Us, "US")
+lrtest(IP_Us, "US")
 
 load("./Data/IP_US2")
-dbic(IP_Us2, "US2")
+lrtest(IP_Us2, "US2")
 
 load("./Data/IP_BELGIUM")
-dbic(IP_Belgium, "Belgium")
+lrtest(IP_Belgium, "Belgium")
 
 load("./Data/IP_GERMANY")
-dbic(IP_Germany, "Germany")
+lrtest(IP_Germany, "Germany")
 
 load("./Data/IP_FRANCE")
-dbic(IP_France, "France")
+lrtest(IP_France, "France")
 
 load("./Data/IP_SPAIN")
-dbic(IP_Spain, "Spain")
+lrtest(IP_Spain, "Spain")
 
 load("./Data/IP_ITALY")
-dbic(IP_Italy, "Italy")
+lrtest(IP_Italy, "Italy")
 
-print(sum(zz>0)/length(zz))
-print(sum(ww>0)/length(ww))
+print(sum(zz<PVAL)/length(zz))
+print(sum(ww<PVAL)/length(ww))
 hist(zz, breaks=50, main="all")
-hist(ww, breaks=50, main="all")
-
-
+hist(ww, breaks=50, main="all (logs)")
